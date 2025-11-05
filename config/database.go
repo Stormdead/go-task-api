@@ -24,11 +24,14 @@ func ConnectDB() {
 	port := os.Getenv("DB_PORT")
 	name := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, pass, host, port, name)
+	// DSN mejorado con charset y parseTime
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, pass, host, port, name)
+
 	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error al conectar con la base de datos:", err)
 	}
 
 	DB = database
+	log.Println("Conexión exitosa a la base de datos")
 }

@@ -6,7 +6,8 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"unique" json:"username"`
-	Email    string `gorm:"unique" json:"email"`
-	Password string `json:"password"`
+	Username string `gorm:"unique;not null" json:"username"`
+	Email    string `gorm:"unique;not null" json:"email"`
+	Password string `gorm:"not null" json:"password"`
+	Tasks    []Task `gorm:"foreignKey:UserID" json:"tasks,omitempty"`
 }

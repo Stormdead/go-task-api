@@ -1,13 +1,12 @@
 package config
 
 import (
+	"errors"
 	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
-
-var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 type Claims struct {
 	Username string `json:"username"`
@@ -16,6 +15,11 @@ type Claims struct {
 
 // Generar token JWT
 func GenerateToken(username string) (string, error) {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return "", errors.New("JWT_SECRET no configurado")
+	}
+
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
 		Username: username,
@@ -25,14 +29,19 @@ func GenerateToken(username string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtSecret)
+	return token.SignedString([]byte(secret))
 }
 
 // Validar token
 func ValidateToken(tokenString string) (*Claims, error) {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return nil, errors.New("JWT_SECRET no configurado")
+	}
+
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
+		return []byte(secret), nil
 	})
 
 	if err != nil || !token.Valid {
