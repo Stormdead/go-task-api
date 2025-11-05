@@ -1,0 +1,21 @@
+# Archivos de entorno y configuración
+.env
+*.log
+
+# Archivos de dependencias
+/vendor/
+bin/
+tmp/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación
+*.exe
+*.out
+*.test
+
+# IDEs
+.vscode/
+.idea/
